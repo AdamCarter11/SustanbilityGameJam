@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TrashController : MonoBehaviour
 {
+    [SerializeField] GameManager gm;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +18,8 @@ public class TrashController : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Destroy(gameObject);
+        Destroy(collision.gameObject);
+
+        gm.AddTrash(1);
     }
 }
