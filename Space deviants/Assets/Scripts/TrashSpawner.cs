@@ -41,11 +41,12 @@ public class TrashSpawner : MonoBehaviour
         }
         if (random == 1)
         {
-            trashInstance = Instantiate(wavePrefab, transform.position, Quaternion.identity);
+            float angle = Mathf.Atan2(spawnPoint.y, spawnPoint.x) * Mathf.Rad2Deg;
+            Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            trashInstance = Instantiate(wavePrefab, transform.position, targetRotation);
             trashForce = Random.Range(minSpawnSpeed, maxSpawnSpeed);
-            //trashInstance.GetComponent<Rigidbody2D>().AddForce(spawnPoint * trashForce);
         }
 
-        
+
     }
 }
