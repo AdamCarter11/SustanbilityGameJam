@@ -8,6 +8,7 @@ public class TrashSpawner : MonoBehaviour
     [SerializeField] int earthRadius = 1;
     [SerializeField] GameObject trashPrefab;
     [SerializeField] GameObject wavePrefab;
+    [SerializeField] GameObject explodingPrefab;
     [SerializeField] float trashForce = 200;
     [SerializeField] float minSpawnSpeed = 100f, maxSpawnSpeed = 150f;
     [SerializeField] float spawnStartDelay = 1f, spawnerDelay = 1f;
@@ -32,7 +33,7 @@ public class TrashSpawner : MonoBehaviour
     {
         spawnPoint = (Random.insideUnitCircle) * earthRadius;
         GameObject trashInstance;
-        int random = Random.Range(0, 2);
+        int random = Random.Range(0, 3);
         if (random == 0)
         {
             trashInstance = Instantiate(trashPrefab, transform.position, Quaternion.identity);
@@ -46,7 +47,17 @@ public class TrashSpawner : MonoBehaviour
             trashInstance = Instantiate(wavePrefab, transform.position, targetRotation);
             trashForce = Random.Range(minSpawnSpeed, maxSpawnSpeed);
         }
+        if (random == 2)
+        {
+            trashInstance = Instantiate(explodingPrefab, transform.position, Quaternion.identity);
+            trashForce = Random.Range(minSpawnSpeed, maxSpawnSpeed);
+            trashInstance.GetComponent<Rigidbody2D>().AddForce(spawnPoint * trashForce);
+        }
 
 
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
     }
 }
