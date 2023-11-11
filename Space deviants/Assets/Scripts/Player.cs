@@ -11,10 +11,12 @@ public class Player : MonoBehaviour
     [SerializeField] float boundaryForce = 2f;
     [SerializeField] float gravitationalForce;
     [SerializeField] Transform planet;
-    
-    
+    [SerializeField] GameObject projectilePrefab;
+
+
     private Rigidbody2D rb;
     private Camera mainCamera;
+    GameObject projectile = null;
 
     void Start()
     {
@@ -29,6 +31,15 @@ public class Player : MonoBehaviour
         ApplyGravitationalPull();
         ClampToScreen();
         CapSpeed();
+        HarpoonLogic();
+    }
+    void HarpoonLogic()
+    {
+        
+        if (Input.GetKeyDown(KeyCode.Space) && projectile == null)
+        {
+            projectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
+        }
     }
 
     void HandleThrustInput()
