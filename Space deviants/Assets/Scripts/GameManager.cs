@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public float currEarthTrash = 1;
     public float currPlayerTrash = 1;
     private bool addPlayerTrash = true;
-    private bool addEarthTrash;
+    private bool addEarthTrash = true;
     private float tempPlayerTrashGoal = 0;
     private float tempEarthTrashGoal = 0;
 
@@ -61,7 +61,8 @@ public class GameManager : MonoBehaviour
         if(type == 2)
         {
             tempEarthTrashGoal += 10;
-            StartCoroutine(fillEarthTrash());
+            if(addEarthTrash)
+                StartCoroutine(fillEarthTrash());
 
         }
     }
@@ -80,14 +81,24 @@ public class GameManager : MonoBehaviour
     IEnumerator fillEarthTrash()
     {
         addEarthTrash = false;
+
+        float baseScale = .9f + (currEarthTrash / 100); // Base scale
+        float maxScaleFactor = 0.1f; // Maximum scale factor (10% increase)
+
         while (currEarthTrash < tempEarthTrashGoal)
         {
-            currEarthTrash += .01f;
-            earthTrash.transform.localScale += (Vector3.one * .001f);
-            yield return new WaitForSeconds(.01f);
+            currEarthTrash += 0.01f;
 
+            // Calculate the scale factor based on currEarthTrash
+            float scaleFactor = baseScale + (currEarthTrash / tempEarthTrashGoal) * maxScaleFactor;
+
+            // Use the scale factor to modify the scale of earthTrash
+            earthTrash.transform.localScale = Vector3.one * scaleFactor;
+
+            yield return new WaitForSeconds(0.01f);
         }
-        addPlayerTrash = true;
+
+        addEarthTrash = true;
     }
 }
 

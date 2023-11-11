@@ -133,7 +133,7 @@ public class Harpoon : MonoBehaviour
         if (collision.gameObject.CompareTag("Earth"))
         {
             Destroy(this.gameObject);
-            if (launchObj || shotBack)
+            if (shotBack)
             {
                 // planet gets more trash
                 gm = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManager>();

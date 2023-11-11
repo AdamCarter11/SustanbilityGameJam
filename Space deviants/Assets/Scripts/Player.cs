@@ -25,10 +25,12 @@ public class Player : MonoBehaviour
     private int health;
     private bool canDash = true; // Flag to check if the player can dash
     private bool stunned = false;
+    private float origionalMaxSpeed;
 
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private bool isFlashing = false;
+    private bool isDashing = false;
 
     void Start()
     {
@@ -37,6 +39,7 @@ public class Player : MonoBehaviour
         health = startingHealth;
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
+        origionalMaxSpeed = maxSpeed;
     }
 
     void Update()
@@ -45,10 +48,12 @@ public class Player : MonoBehaviour
         {
             HandleThrustInput();
             HandleRotationInput();
-            ApplyGravitationalPull();
+            if (!isDashing)
+            {
+                ApplyGravitationalPull();
+            }
         }
         ClampToScreen();
-        CapSpeed();
         HarpoonLogic();
         UpdateHealthUI();
 
@@ -57,21 +62,33 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(Dash());
         }
+        CapSpeed();
     }
 
     IEnumerator Dash()
     {
         // Disable the ability to dash during cooldown
         canDash = false;
+        // Double the maxSpeed during the dash
+        maxSpeed *= 2;
 
-        // Normalize the direction to get a unit vector
-        Vector2 direction = Vector2.right;
-        Vector2 normalizedDirection = direction.normalized;
+        isDashing = true;
 
-        // Use Rigidbody2D.AddForce to apply force in the calculated direction
-        rb.AddForce(normalizedDirection * dashForce, ForceMode2D.Impulse);
+        // Store the input direction
+        Vector2 dashDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+
+        // Use Rigidbody2D.AddForce to apply force in the input direction
+        rb.AddForce(dashDirection * dashForce, ForceMode2D.Impulse);
+        Invoke("ResetDash", .5f);
         yield return new WaitForSeconds(dashCooldown);
+
+        // Enable dashing after the cooldown
         canDash = true;
+    }
+    void ResetDash()
+    {
+        isDashing = false;
+        maxSpeed = origionalMaxSpeed;
     }
 
     void UpdateHealthUI()
@@ -95,7 +112,9 @@ public class Player : MonoBehaviour
 
         Vector2 movementDirection = new Vector2(horizontalInput, verticalInput).normalized;
 
-        rb.AddForce(movementDirection * thrustForce);
+        // Apply extra thrust force during dashing
+        float finalThrustForce = isDashing ? thrustForce * 2 : thrustForce;
+        rb.AddForce(movementDirection * finalThrustForce);
     }
 
     void HandleRotationInput()
