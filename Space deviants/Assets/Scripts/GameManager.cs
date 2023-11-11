@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     private float maxPlayerTrash = 100;
     public float currEarthTrash = 100;
     public float currPlayerTrash = 1;
+    private bool addPlayerTrash = true;
+    private bool addEarthTrash;
+    private float tempPlayerTrashGoal = 0;
 
    
     // Start is called before the first frame update
@@ -24,13 +27,36 @@ public class GameManager : MonoBehaviour
     {
         playerFill.fillAmount = currPlayerTrash / maxPlayerTrash;
         earthFill.fillAmount = currEarthTrash / maxEarthTrash;
+
+        
     }
 
     public void AddTrash(int type)
     {
         if (type == 1) 
         {
-            currPlayerTrash = currPlayerTrash + 10;
+            tempPlayerTrashGoal += 10;
+            print(tempPlayerTrashGoal);
+            //if (addPlayerTrash) 
+            {
+                StartCoroutine(fillPlayerTrash());
+            }
+            
         }
     }
+
+    IEnumerator fillPlayerTrash()
+    {
+        addPlayerTrash = false;
+        while (currPlayerTrash < tempPlayerTrashGoal)
+        {
+            currPlayerTrash += .1f;
+            yield return new WaitForSeconds(.01f);
+
+        }
+        addPlayerTrash = true;
+    }
 }
+
+
+
