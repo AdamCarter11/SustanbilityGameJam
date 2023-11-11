@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Trash
   - Earth
+  - Game Manager
   layers:
   - Default
   - TransparentFX

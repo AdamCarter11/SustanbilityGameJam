@@ -9,6 +9,8 @@ public class Harpoon : MonoBehaviour
     [SerializeField] float maxDistance = 5f;  // Adjust the distance the projectile should travel
     [SerializeField] float retractSpeed = 5f;
 
+    GameManager gm;
+
     private float distanceTraveled = 0f;
     private bool grabbedObj = false;
     private bool launchObj = false;
@@ -109,6 +111,8 @@ public class Harpoon : MonoBehaviour
             if (launchObj)
             {
                 // planet gets more trash
+                gm = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManager>();
+                gm.AddTrash(2);
             }
         }
     }
