@@ -2429,6 +2429,7 @@ MonoBehaviour:
   healthFill: {fileID: 493710389}
   startingHealth: 20
   damageFromProj: 5
+  stunDur: 2.5
 --- !u!50 &2031044657
 Rigidbody2D:
   serializedVersion: 4
@@ -2593,11 +2594,12 @@ MonoBehaviour:
   spawnPoint: {x: 0, y: 0}
   earthRadius: 2
   trashPrefab: {fileID: 3486827799225479714, guid: 6732661970889d94fba6a193c18d215f, type: 3}
-  trashForce: 50
+  wavePrefab: {fileID: 0}
+  trashForce: 30
   minSpawnSpeed: 100
-  maxSpawnSpeed: 150
+  maxSpawnSpeed: 110
   spawnStartDelay: 1
-  spawnerDelay: 1
+  spawnerDelay: 2
 --- !u!212 &2067694144
 SpriteRenderer:
   m_ObjectHideFlags: 0
