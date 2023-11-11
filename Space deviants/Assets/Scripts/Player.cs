@@ -1,14 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] float thrustForce = 5f;
+    [SerializeField] float dashForce = 20f; // New variable for dash force
+    [SerializeField] float dashCooldown = 2f; // Cooldown for the dash
     [SerializeField] float maxSpeed = 10f;
     [SerializeField] float rotationSpeed = 3f;
-    [SerializeField] float maxGravitationalForce = 15f; // New variable for max gravitational force
+    [SerializeField] float maxGravitationalForce = 15f;
     [SerializeField] float boundaryForce = 2f;
     [SerializeField] float gravitationalForce;
     [SerializeField] Transform planet;
@@ -19,8 +20,9 @@ public class Player : MonoBehaviour
 
     private Rigidbody2D rb;
     private Camera mainCamera;
-    GameObject projectile = null;
+    private GameObject projectile = null;
     private int health;
+    private bool canDash = true; // Flag to check if the player can dash
 
     void Start()
     {
@@ -38,16 +40,45 @@ public class Player : MonoBehaviour
         CapSpeed();
         HarpoonLogic();
         UpdateHealthUI();
+
+        // Check for dash input
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+        {
+            StartCoroutine(Dash());
+        }
     }
+
+    IEnumerator Dash()
+    {
+        // Disable the ability to dash during cooldown
+        canDash = false;
+
+        // Store the current velocity for restoration after the dash
+        Vector2 originalVelocity = rb.velocity;
+
+        // Apply a burst of force in the current facing direction
+        rb.AddForce(transform.right * dashForce, ForceMode2D.Impulse);
+
+        // Wait for a short duration (adjust as needed)
+        yield return new WaitForSeconds(2f);
+
+        // Restore the original velocity
+        rb.velocity = originalVelocity;
+
+        // Enable the ability to dash after the cooldown
+        yield return new WaitForSeconds(dashCooldown);
+        canDash = true;
+    }
+
     void UpdateHealthUI()
     {
         healthFill.fillAmount = (float)health / (float)startingHealth;
-        print(health / startingHealth);
+        print(health / (float)startingHealth);
     }
+
     void HarpoonLogic()
     {
-        
-        if (Input.GetKeyDown(KeyCode.Space) && projectile == null)
+        if (Input.GetMouseButtonDown(0) && projectile == null)
         {
             projectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
         }
@@ -55,33 +86,25 @@ public class Player : MonoBehaviour
 
     void HandleThrustInput()
     {
-        // Get the WASD movement input
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        // Calculate the movement direction based on the input
         Vector2 movementDirection = new Vector2(horizontalInput, verticalInput).normalized;
 
-        // Apply thrust force in the movement direction
         rb.AddForce(movementDirection * thrustForce);
     }
 
     void HandleRotationInput()
     {
-        // Get the mouse position in world coordinates
         Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = transform.position.z; // Maintain the same Z-coordinate as the player
+        mousePos.z = transform.position.z;
 
-        // Calculate the direction from the player to the mouse cursor
         Vector3 directionToMouse = mousePos - transform.position;
 
-        // Calculate the angle in degrees
         float angle = Mathf.Atan2(directionToMouse.y, directionToMouse.x) * Mathf.Rad2Deg;
 
-        // Create a Quaternion from the angle
         Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-        // Rotate towards the target rotation using Slerp for smooth rotation
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
@@ -94,7 +117,6 @@ public class Player : MonoBehaviour
 
             if (distanceToTarget > 0)
             {
-                // Use Mathf.Min to ensure the gravitational force doesn't exceed maxGravitationalForce
                 float actualGravitationalForce = Mathf.Min(gravitationalForce, maxGravitationalForce);
 
                 Vector2 gravitationalForceVector = directionToTarget.normalized * (1 / distanceToTarget) * actualGravitationalForce;
@@ -136,17 +158,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    #region Collision Logic
-    /*
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Trash"))
-        {
-            health -= damageFromProj;
-            Destroy(collision.gameObject);
-        }
-    }
-    */
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Trash"))
@@ -155,5 +166,4 @@ public class Player : MonoBehaviour
             Destroy(collision.gameObject);
         }
     }
-    #endregion
 }

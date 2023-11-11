@@ -2417,8 +2417,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thrustForce: 3
+  dashForce: 100
+  dashCooldown: 2
   maxSpeed: 4
-  rotationSpeed: 500
+  rotationSpeed: 50
   maxGravitationalForce: 4
   boundaryForce: 2
   gravitationalForce: 2
