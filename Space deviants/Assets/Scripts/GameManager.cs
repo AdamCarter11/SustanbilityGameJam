@@ -30,9 +30,24 @@ public class GameManager : MonoBehaviour
     {
         playerFill.fillAmount = currPlayerTrash / maxPlayerTrash;
         earthFill.fillAmount = currEarthTrash / maxEarthTrash;
+        GameEndLogic();
         //earthFill.fillAmount = .5f;
 
         //earthTrash.transform.localScale = earthTrash.transform.localScale * (earthFill.fillAmount * 10);
+    }
+    private void GameEndLogic()
+    {
+        if(currEarthTrash + currPlayerTrash >= 100)
+        {
+            if(currEarthTrash >= currPlayerTrash)
+            {
+                // earth won (player loses)
+            }
+            if(currPlayerTrash > currEarthTrash)
+            {
+                // player won (earth loses)
+            }
+        }
     }
 
     public void AddTrash(int type)
