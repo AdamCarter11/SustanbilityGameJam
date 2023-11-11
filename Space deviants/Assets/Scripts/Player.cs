@@ -65,16 +65,16 @@ public class Player : MonoBehaviour
         canDash = false;
 
         // Store the current velocity for restoration after the dash
-        Vector2 originalVelocity = rb.velocity;
+        //Vector2 originalVelocity = rb.velocity;
 
         // Apply a burst of force in the current facing direction
         rb.AddForce(transform.right * dashForce, ForceMode2D.Impulse);
 
         // Wait for a short duration (adjust as needed)
-        yield return new WaitForSeconds(2f);
+        //yield return new WaitForSeconds(2f);
 
         // Restore the original velocity
-        rb.velocity = originalVelocity;
+        //rb.velocity = originalVelocity;
 
         // Enable the ability to dash after the cooldown
         yield return new WaitForSeconds(dashCooldown);
