@@ -2480,7 +2480,7 @@ MonoBehaviour:
   earthFill: {fileID: 1099643898}
   playerFill: {fileID: 1417340762}
   earthTrash: {fileID: 752068804}
-  currEarthTrash: 0
+  currEarthTrash: 1
   currPlayerTrash: 0
 --- !u!4 &1886298459
 Transform:
