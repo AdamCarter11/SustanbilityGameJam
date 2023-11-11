@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -12,16 +13,20 @@ public class Player : MonoBehaviour
     [SerializeField] float gravitationalForce;
     [SerializeField] Transform planet;
     [SerializeField] GameObject projectilePrefab;
-
+    [SerializeField] Image healthFill;
+    [SerializeField] int startingHealth = 20;
+    [SerializeField] int damageFromProj = 5;
 
     private Rigidbody2D rb;
     private Camera mainCamera;
     GameObject projectile = null;
+    private int health;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         mainCamera = Camera.main;
+        health = startingHealth;
     }
 
     void Update()
@@ -32,6 +37,12 @@ public class Player : MonoBehaviour
         ClampToScreen();
         CapSpeed();
         HarpoonLogic();
+        UpdateHealthUI();
+    }
+    void UpdateHealthUI()
+    {
+        healthFill.fillAmount = (float)health / (float)startingHealth;
+        print(health / startingHealth);
     }
     void HarpoonLogic()
     {
@@ -124,4 +135,25 @@ public class Player : MonoBehaviour
             rb.velocity = rb.velocity.normalized * maxSpeed;
         }
     }
+
+    #region Collision Logic
+    /*
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Trash"))
+        {
+            health -= damageFromProj;
+            Destroy(collision.gameObject);
+        }
+    }
+    */
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Trash"))
+        {
+            health -= damageFromProj;
+            Destroy(collision.gameObject);
+        }
+    }
+    #endregion
 }

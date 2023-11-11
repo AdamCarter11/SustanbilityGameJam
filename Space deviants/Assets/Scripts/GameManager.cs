@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
         addEarthTrash = false;
         while (currEarthTrash < tempEarthTrashGoal)
         {
-            currEarthTrash += .1f;
+            currEarthTrash += .01f;
             earthTrash.transform.localScale += (Vector3.one * .001f);
             yield return new WaitForSeconds(.01f);
 

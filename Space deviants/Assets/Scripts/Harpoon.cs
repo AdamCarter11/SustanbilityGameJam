@@ -104,6 +104,7 @@ public class Harpoon : MonoBehaviour
         if (collision.gameObject.CompareTag("Trash"))
         {
             grabbedObj = true;
+            Destroy(collision.gameObject);
         }
         if (collision.gameObject.CompareTag("Earth"))
         {
