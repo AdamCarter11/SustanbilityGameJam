@@ -17,25 +17,36 @@ public class Player : MonoBehaviour
     [SerializeField] Image healthFill;
     [SerializeField] int startingHealth = 20;
     [SerializeField] int damageFromProj = 5;
+    [SerializeField] float stunDur = 2.5f;
 
     private Rigidbody2D rb;
     private Camera mainCamera;
     private GameObject projectile = null;
     private int health;
     private bool canDash = true; // Flag to check if the player can dash
+    private bool stunned = false;
+
+    private SpriteRenderer spriteRenderer;
+    private Color originalColor;
+    private bool isFlashing = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         mainCamera = Camera.main;
         health = startingHealth;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
     }
 
     void Update()
     {
-        HandleThrustInput();
-        HandleRotationInput();
-        ApplyGravitationalPull();
+        if (!stunned)
+        {
+            HandleThrustInput();
+            HandleRotationInput();
+            ApplyGravitationalPull();
+        }
         ClampToScreen();
         CapSpeed();
         HarpoonLogic();
@@ -164,6 +175,41 @@ public class Player : MonoBehaviour
         {
             health -= damageFromProj;
             Destroy(collision.gameObject);
+            if(health <= 0)
+            {
+                // stun logic
+                StartCoroutine(StunLogic());
+            }
         }
+    }
+    IEnumerator StunLogic()
+    {
+        stunned = true;
+        StartCoroutine(FlashCharacter());
+        yield return new WaitForSeconds(stunDur);
+        health = startingHealth;
+        stunned = false;
+    }
+    IEnumerator FlashCharacter()
+    {
+        // Flash for 3 seconds
+        float duration = stunDur;
+
+        // Repeat every 0.2 seconds
+        float flashInterval = 0.2f;
+
+        while (duration > 0)
+        {
+            yield return new WaitForSeconds(flashInterval);
+            isFlashing = !isFlashing;
+
+            // Set the opacity based on whether it's currently flashing
+            spriteRenderer.color = isFlashing ? new Color(originalColor.r, originalColor.g, originalColor.b, 0f) : originalColor;
+
+            duration -= flashInterval;
+        }
+
+        // Reset the color to the original color after the flashing is done
+        spriteRenderer.color = originalColor;
     }
 }

@@ -5,8 +5,8 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Harpoon : MonoBehaviour
 {
-    [SerializeField] float speed = 5f;  // Adjust the speed as needed
-    [SerializeField] float maxDistance = 5f;  // Adjust the distance the projectile should travel
+    [SerializeField] float speed = 5f;
+    [SerializeField] float maxDistance = 5f;
     [SerializeField] float retractSpeed = 5f;
 
     GameManager gm;
@@ -16,6 +16,7 @@ public class Harpoon : MonoBehaviour
     private bool launchObj = false;
     private GameObject player, planet;
     private Rigidbody2D rb;
+    private bool shotBack = false;
 
     private void Start()
     {
@@ -23,6 +24,7 @@ public class Harpoon : MonoBehaviour
         planet = GameObject.FindGameObjectWithTag("Earth");
         rb = GetComponent<Rigidbody2D>();
     }
+
     void Update()
     {
         if (!grabbedObj)
@@ -31,21 +33,22 @@ public class Harpoon : MonoBehaviour
         }
         else
         {
-            if (!launchObj)
+            if (!launchObj && !shotBack)
             {
                 RetractProj();
             }
-            else
+            else if(launchObj)
             {
                 LaunchBackProj();
+                launchObj = false;
+                shotBack = true;
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetMouseButtonDown(0))
         {
             launchObj = true;
         }
-        
 
         // Check if the projectile has traveled the desired distance
         if (distanceTraveled >= maxDistance && !grabbedObj)
@@ -53,28 +56,39 @@ public class Harpoon : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     void LaunchBackProj()
     {
-        // Calculate the direction from the object to the planet
-        Vector3 directionToTarget = planet.transform.position - transform.position;
+        if (planet == null)
+        {
+            Debug.LogWarning("Planet object not assigned!");
+            return;
+        }
+
+        // Calculate the direction from the object to the mouse cursor
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 directionToMouse = mousePos - transform.position;
 
         // Normalize the direction to get a unit vector
-        Vector3 normalizedDirection = directionToTarget.normalized;
+        Vector3 normalizedDirection = directionToMouse.normalized;
 
         // Use Rigidbody.AddForce to apply force in the calculated direction
-        rb.AddForce(normalizedDirection * retractSpeed * Time.deltaTime, ForceMode2D.Impulse);
-    }
+        rb.AddForce(normalizedDirection * retractSpeed * 500 * Time.deltaTime, ForceMode2D.Impulse);
+        print("proj force: " + rb.velocity);
+        Destroy(this.gameObject, 2f);
+    } 
+     
     void RetractProj()
     {
         if (player == null)
         {
-            Debug.LogWarning("Target object not assigned!");
+            Debug.LogWarning("Player object not assigned!");
             return;
         }
 
         // Calculate the direction from the current position to the target position
         Vector3 directionToTarget = player.transform.position - transform.position;
-        if(Vector2.Distance(player.transform.position, transform.position) >= 1f)
+        if (Vector2.Distance(player.transform.position, transform.position) >= 1f)
         {
             // Normalize the direction to get a unit vector
             Vector3 normalizedDirection = directionToTarget.normalized;
@@ -92,6 +106,7 @@ public class Harpoon : MonoBehaviour
         // Update the distance traveled
         distanceTraveled += speed * Time.deltaTime;
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Trash"))
@@ -99,17 +114,26 @@ public class Harpoon : MonoBehaviour
             grabbedObj = true;
         }
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Trash"))
         {
-            grabbedObj = true;
-            Destroy(collision.gameObject);
+            if (!grabbedObj)
+            {
+                grabbedObj = true;
+                Destroy(collision.gameObject);
+            }
+            if (shotBack)
+            {
+                Destroy(collision.gameObject);
+                Destroy(this.gameObject);
+            }
         }
         if (collision.gameObject.CompareTag("Earth"))
         {
             Destroy(this.gameObject);
-            if (launchObj)
+            if (launchObj || shotBack)
             {
                 // planet gets more trash
                 gm = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManager>();
