@@ -25,4 +25,13 @@ public class TrashController : MonoBehaviour
             gm.AddTrash(1);
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Trash"))
+        {
+            Destroy(collision.gameObject);
+
+            gm.AddTrash(1);
+        }
+    }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -37,16 +38,11 @@ public class GameManager : MonoBehaviour
     }
     private void GameEndLogic()
     {
-        if(currEarthTrash + currPlayerTrash >= 100)
+        if(currEarthTrash + currPlayerTrash >= (maxPlayerTrash + maxEarthTrash) / 2)
         {
-            if(currEarthTrash >= currPlayerTrash)
-            {
-                // earth won (player loses)
-            }
-            if(currPlayerTrash > currEarthTrash)
-            {
-                // player won (earth loses)
-            }
+            PlayerPrefs.SetFloat("player", currEarthTrash / maxEarthTrash);
+            PlayerPrefs.SetFloat("enemy", currPlayerTrash / maxPlayerTrash);
+            SceneManager.LoadScene("GameOver");
         }
     }
 
