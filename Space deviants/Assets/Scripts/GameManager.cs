@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     }
     private void GameEndLogic()
     {
-        if(currEarthTrash + currPlayerTrash >= (maxPlayerTrash + maxEarthTrash) / 2)
+        if(currEarthTrash  >=  maxEarthTrash || currPlayerTrash >= maxEarthTrash)
         {
             PlayerPrefs.SetFloat("player", currEarthTrash / maxEarthTrash);
             PlayerPrefs.SetFloat("enemy", currPlayerTrash / maxPlayerTrash);
