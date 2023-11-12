@@ -33,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &7090586612794815278
 SpriteRenderer:
@@ -76,8 +76,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 0.10201979, g: 1, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 75ae053a07df8b044b45e9746e443d93, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -110,7 +110,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a2ddff35466812546b963a84ad185ff3, type: 3}
   - {fileID: 8300000, guid: a055f7522762e294b821236f76fae57d, type: 3}
   - {fileID: 8300000, guid: 82e9d0b7e02801742b223f3d2118a715, type: 3}
-  audioSource: {fileID: 0}
 --- !u!70 &8296202843099415953
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
