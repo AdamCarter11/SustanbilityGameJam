@@ -14,4 +14,8 @@ public class ButtonLogic : MonoBehaviour
     {
         tutorialPanel.SetActive(true);
     }
+    public void CloseTutorialpanel()
+    {
+        tutorialPanel.SetActive(false);
+    }
 }

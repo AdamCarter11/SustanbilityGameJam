@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
         while (currEarthTrash < tempEarthTrashGoal)
         {
             currEarthTrash += 1f;
-            earthTrash.transform.localScale *= 1f / 0.9984f;
+            earthTrash.transform.localScale *= 1f / 0.99f;
             // Calculate the scale factor based on currEarthTrash
             //float scaleFactor = baseScale + (currEarthTrash / tempEarthTrashGoal) * maxScaleFactor;
 

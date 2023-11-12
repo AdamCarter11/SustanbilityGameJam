@@ -108,6 +108,7 @@ public class Harpoon : MonoBehaviour
             {
                 grabbedObj = true;
                 Destroy(collision.gameObject);
+                Time.timeScale = 1f;
             }
             if (shotBack)
             {
