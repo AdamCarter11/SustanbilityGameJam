@@ -2767,6 +2767,7 @@ MonoBehaviour:
   healthFill: {fileID: 493710389}
   startingHealth: 20
   damageFromProj: 5
+  damageFromCloud: 0.1
   stunDur: 2.5
 --- !u!50 &2031044657
 Rigidbody2D:
