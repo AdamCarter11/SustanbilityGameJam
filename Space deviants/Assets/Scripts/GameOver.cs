@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameOver : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI scorePercent;
+    [SerializeField] TextMeshProUGUI scorePlayerPercent;
     private float earthPercent, playerPercent;
     void Start()
     {
@@ -20,7 +21,8 @@ public class GameOver : MonoBehaviour
         playerPercent = Mathf.Round(PlayerPrefs.GetFloat("player") * 100f * 100f) / 100f;
         earthPercent = Mathf.Min(earthPercent, 100);
         playerPercent = Mathf.Min(playerPercent, 100);
-        scorePercent.text = "Earth was : " + playerPercent + "% polluted, Space was: " + earthPercent + "% polluted";
+        scorePercent.text = "Earth was : " + playerPercent + "% polluted"; 
+        scorePlayerPercent.text = "Space was: " + earthPercent + "% polluted";
     }
 } 
  
