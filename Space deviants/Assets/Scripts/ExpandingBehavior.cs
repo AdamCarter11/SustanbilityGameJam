@@ -43,10 +43,10 @@ public class ExpandingBehavior : MonoBehaviour
         Color targetColor = new Color(initialColor.r, initialColor.g, initialColor.b, 0f);
 
         float elapsedTime = 0f;
-        while (elapsedTime < 5)
+        while (elapsedTime < 2.5f)
         {
             elapsedTime += Time.deltaTime;
-            rend.color = Color.Lerp(initialColor, targetColor, elapsedTime / 5);
+            rend.color = Color.Lerp(initialColor, targetColor, elapsedTime / 2.5f);
             yield return null;
         }
     }

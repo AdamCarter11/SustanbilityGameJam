@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Image playerFill;
     [SerializeField] GameObject earthTrash;
     [SerializeField] GameObject playerTrash;
+    
 
     private float maxEarthTrash = 100;
     private float maxPlayerTrash = 100;
