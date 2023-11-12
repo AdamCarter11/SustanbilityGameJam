@@ -14,7 +14,9 @@ public class Player : MonoBehaviour
     [SerializeField] float boundaryForce = 2f;
     [SerializeField] float gravitationalForce;
     [SerializeField] Transform planet;
+    [SerializeField] GameObject sprite;
     [SerializeField] GameObject projectilePrefab;
+    [SerializeField] Transform projectileDir;
     [SerializeField] Image healthFill;
     [SerializeField] int startingHealth = 20;
     [SerializeField] int damageFromProj = 5;
@@ -29,17 +31,17 @@ public class Player : MonoBehaviour
     private bool stunned = false;
     private float origionalMaxSpeed;
 
-    private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private bool isFlashing = false;
     private bool isDashing = false;
+    private SpriteRenderer spriteRenderer;
 
     void Start()
-    {
+    {   
         rb = GetComponent<Rigidbody2D>();
         mainCamera = Camera.main;
         health = startingHealth;
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = sprite.GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
         origionalMaxSpeed = maxSpeed;
     }
@@ -55,15 +57,15 @@ public class Player : MonoBehaviour
                 ApplyGravitationalPull();
             }
         }
-        ClampToScreen();
-        HarpoonLogic();
-        UpdateHealthUI();
-
         // Check for dash input
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
             StartCoroutine(Dash());
         }
+        ClampToScreen();
+        HarpoonLogic();
+        UpdateHealthUI();
+
         CapSpeed();
     }
 
@@ -81,6 +83,7 @@ public class Player : MonoBehaviour
 
         // Use Rigidbody2D.AddForce to apply force in the input direction
         rb.AddForce(dashDirection * dashForce, ForceMode2D.Impulse);
+        spriteRenderer.flipX = dashDirection.x < 0;
         Invoke("ResetDash", .5f);
         yield return new WaitForSeconds(dashCooldown);
 
@@ -103,7 +106,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && projectile == null)
         {
-            projectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
+            projectile = Instantiate(projectilePrefab, transform.position, projectileDir.rotation);
         }
     }
 
@@ -117,6 +120,8 @@ public class Player : MonoBehaviour
         // Apply extra thrust force during dashing
         float finalThrustForce = isDashing ? thrustForce * 2 : thrustForce;
         rb.AddForce(movementDirection * finalThrustForce);
+        if (horizontalInput != 0)
+            spriteRenderer.flipX = horizontalInput < 0;
     }
 
     void HandleRotationInput()
@@ -130,7 +135,7 @@ public class Player : MonoBehaviour
 
         Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        projectileDir.rotation = Quaternion.Slerp(projectileDir.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
     void ApplyGravitationalPull()
@@ -208,7 +213,9 @@ public class Player : MonoBehaviour
     {
         stunned = true;
         StartCoroutine(FlashCharacter());
+        rb.freezeRotation = false;
         yield return new WaitForSeconds(stunDur);
+        rb.freezeRotation = true;
         health = startingHealth;
         stunned = false;
     }
