@@ -14,7 +14,7 @@ public class TrashSpawner : MonoBehaviour
     [SerializeField] float trashForce = 200;
     [SerializeField] float minSpawnSpeed = 100f, maxSpawnSpeed = 150f;
     [SerializeField] float spawnStartDelay = 1f, spawnerDelay = 1f;
-    [SerializeField] float compactorSpawnStartDelay = 3f, compactorSpawnerDelay = 5f;
+    [SerializeField] float compactorSpawnStartDelay = 10f, compactorSpawnerDelay = 5f;
     // Start is called before the first frame update
     void Start()
     {

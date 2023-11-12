@@ -110,15 +110,15 @@ public class GameManager : MonoBehaviour
 
         while (currEarthTrash < tempEarthTrashGoal)
         {
-            currEarthTrash += 0.01f;
-
+            currEarthTrash += 0.1f;
+            earthTrash.transform.localScale *= 1f / 0.9984f;
             // Calculate the scale factor based on currEarthTrash
-            float scaleFactor = baseScale + (currEarthTrash / tempEarthTrashGoal) * maxScaleFactor;
+            //float scaleFactor = baseScale + (currEarthTrash / tempEarthTrashGoal) * maxScaleFactor;
 
             // Use the scale factor to modify the scale of earthTrash
-            earthTrash.transform.localScale = Vector3.one * scaleFactor;
+            //earthTrash.transform.localScale = Vector3.one * scaleFactor;
 
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.1f);
         }
 
         addEarthTrash = true;
