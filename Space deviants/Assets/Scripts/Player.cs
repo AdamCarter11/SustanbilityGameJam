@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
     void UpdateHealthUI()
     {
         healthFill.fillAmount = (float)health / (float)startingHealth;
-        print(health / (float)startingHealth);
+        //print(health / (float)startingHealth);
     }
 
     void HarpoonLogic()

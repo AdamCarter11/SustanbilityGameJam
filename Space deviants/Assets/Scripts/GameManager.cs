@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator fillEarthTrash()
     {
-        print(tempEarthTrashGoal);
+        //print(tempEarthTrashGoal);
         addEarthTrash = false;
 
         float baseScale = .9f + (currEarthTrash / 100); // Base scale
