@@ -105,6 +105,7 @@ MonoBehaviour:
   shakeMagnitude: 0.1
   shakeDuration: 0.2
   pauseDuration: 0.05
+  particleSystemPrefab: {fileID: 9052950316546544645, guid: 7ba839dc848019548a67c3a68b34e114, type: 3}
 --- !u!70 &8296202843099415953
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

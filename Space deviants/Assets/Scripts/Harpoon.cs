@@ -10,6 +10,7 @@ public class Harpoon : MonoBehaviour
     [SerializeField] float shakeMagnitude = 0.1f;
     [SerializeField] float shakeDuration = 0.2f;
     [SerializeField] float pauseDuration = 0.5f;
+    [SerializeField] ParticleSystem particleSystemPrefab;
 
     GameManager gm;
 
@@ -109,6 +110,7 @@ public class Harpoon : MonoBehaviour
                 Destroy(collision.gameObject);
                 Time.timeScale = 1f;
                 Destroy(this.gameObject);
+                ParticleSystem newParticleSystem = Instantiate(particleSystemPrefab, transform.position, transform.rotation);
             }
         }
         if (collision.gameObject.CompareTag("Earth"))
@@ -159,10 +161,17 @@ public class Harpoon : MonoBehaviour
             Vector3 normalizedDirection = directionToTarget.normalized;
             transform.Translate(normalizedDirection * retractSpeed * Time.deltaTime);
         }
+        else
+        {
+            isOrbiting = true;
+            shotBack = true;
+            print("retract?");
+        }
     }
 
     private void OrbitPlayer()
     {
+        
         float orbitSpeed = 2f;
         float orbitRadius = 1.5f;
 
@@ -175,13 +184,15 @@ public class Harpoon : MonoBehaviour
 
         // Set the new position relative to the player
         transform.position = player.transform.position + new Vector3(x, y, 0f);
+        
+        //transform.position = player.transform.position + new Vector3(1f, 0, 0);
     }
 
     private void StopOrbiting()
     {
         isOrbiting = false;
-        transform.position = initialPosition;
-        transform.rotation = initialRotation;
+        //transform.position = initialPosition;
+        //transform.rotation = initialRotation;
     }
 
     private IEnumerator DestroyWithDelay()
@@ -194,13 +205,15 @@ public class Harpoon : MonoBehaviour
         yield return new WaitForSeconds(pauseDuration);
 
         Time.timeScale = 1f;
-        Destroy(gameObject);
+        ParticleSystem newParticleSystem = Instantiate(particleSystemPrefab, transform.position, transform.rotation);
+        
 
         if (shotBack)
         {
             gm = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManager>();
             gm.AddTrash(2);
         }
+        Destroy(gameObject);
     }
 
     private IEnumerator ScreenShake()
