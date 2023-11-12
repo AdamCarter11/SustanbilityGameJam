@@ -7,7 +7,9 @@ TagManager:
   - Trash
   - Earth
   - Game Manager
+
   - Toxic
+  - Space
   layers:
   - Default
   - TransparentFX

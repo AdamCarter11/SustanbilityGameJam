@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Image earthFill;
     [SerializeField] Image playerFill;
     [SerializeField] GameObject earthTrash;
+    [SerializeField] GameObject playerTrash;
 
     private float maxEarthTrash = 100;
     private float maxPlayerTrash = 100;
@@ -51,7 +52,6 @@ public class GameManager : MonoBehaviour
         if (type == 1) 
         {
             tempPlayerTrashGoal += 10;
-            print(tempPlayerTrashGoal);
             //if (addPlayerTrash) 
             {
                 StartCoroutine(fillPlayerTrash());
@@ -73,6 +73,7 @@ public class GameManager : MonoBehaviour
         while (currPlayerTrash < tempPlayerTrashGoal)
         {
             currPlayerTrash += .1f;
+            playerTrash.transform.localScale *= 0.9984f;
             yield return new WaitForSeconds(.01f);
 
         }
@@ -80,6 +81,7 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator fillEarthTrash()
     {
+        print(tempEarthTrashGoal);
         addEarthTrash = false;
 
         float baseScale = .9f + (currEarthTrash / 100); // Base scale
