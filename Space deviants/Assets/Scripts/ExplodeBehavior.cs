@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ExplodeBehavior : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class ExplodeBehavior : MonoBehaviour
 
     private void OnDestroy()
     {
-        Instantiate(toxicCloud,transform.position,Quaternion.identity);
+        if(SceneManager.GetActiveScene().name == "SamepleScene")
+            Instantiate(toxicCloud,transform.position,Quaternion.identity);
     }
 }

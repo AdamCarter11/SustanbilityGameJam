@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
         }
         if(type == 2)
         {
-            tempEarthTrashGoal += 10;
+            tempEarthTrashGoal += 5;
             if(addEarthTrash)
                 StartCoroutine(fillEarthTrash());
 
@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
             addPlayerTrash = false;
             while (currPlayerTrash > tempPlayerTrashGoal)
             {
-                print("empty");
+                //print("empty");
                 currPlayerTrash -= .1f;
                 playerTrash.transform.localScale *= 1f / 0.9984f;
                 yield return new WaitForSeconds(.01f);

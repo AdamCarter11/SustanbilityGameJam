@@ -11,6 +11,7 @@ public class Harpoon : MonoBehaviour
     [SerializeField] float shakeDuration = 0.2f;
     [SerializeField] float pauseDuration = 0.5f;
     [SerializeField] ParticleSystem particleSystemPrefab;
+    [SerializeField] GameObject trashVisualization;
 
     [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
     private AudioSource audioSource;
@@ -107,6 +108,8 @@ public class Harpoon : MonoBehaviour
             if (!grabbedObj)
             {
                 grabbedObj = true;
+                trashVisualization.SetActive(true);
+                transform.localScale *= 2f;
                 Destroy(collision.gameObject);
                 Time.timeScale = 1f;
             }
