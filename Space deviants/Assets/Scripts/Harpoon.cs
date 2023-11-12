@@ -182,7 +182,7 @@ public class Harpoon : MonoBehaviour
     {
         
         float orbitSpeed = 2f;
-        float orbitRadius = 1.5f;
+        float orbitRadius = 1.2f;
 
         // Calculate the angle based on time and speed
         float angle = Time.time * orbitSpeed;
