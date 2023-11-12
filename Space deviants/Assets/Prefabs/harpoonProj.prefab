@@ -106,6 +106,11 @@ MonoBehaviour:
   shakeDuration: 0.2
   pauseDuration: 0.05
   particleSystemPrefab: {fileID: 9052950316546544645, guid: 7ba839dc848019548a67c3a68b34e114, type: 3}
+  audioClips:
+  - {fileID: 8300000, guid: a2ddff35466812546b963a84ad185ff3, type: 3}
+  - {fileID: 8300000, guid: a055f7522762e294b821236f76fae57d, type: 3}
+  - {fileID: 8300000, guid: 82e9d0b7e02801742b223f3d2118a715, type: 3}
+  audioSource: {fileID: 0}
 --- !u!70 &8296202843099415953
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

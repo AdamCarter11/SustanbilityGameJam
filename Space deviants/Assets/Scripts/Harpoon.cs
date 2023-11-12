@@ -12,6 +12,9 @@ public class Harpoon : MonoBehaviour
     [SerializeField] float pauseDuration = 0.5f;
     [SerializeField] ParticleSystem particleSystemPrefab;
 
+    [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
+    private AudioSource audioSource;
+
     GameManager gm;
 
     private float distanceTraveled = 0f;
@@ -31,6 +34,7 @@ public class Harpoon : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         planet = GameObject.FindGameObjectWithTag("Earth");
+        audioSource = GameObject.FindGameObjectWithTag("AudioPlayer").GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody2D>();
         mainCamera = Camera.main;
 
@@ -111,6 +115,7 @@ public class Harpoon : MonoBehaviour
                 Time.timeScale = 1f;
                 Destroy(this.gameObject);
                 ParticleSystem newParticleSystem = Instantiate(particleSystemPrefab, transform.position, transform.rotation);
+                PlayRandomAudioClip();
             }
         }
         if (collision.gameObject.CompareTag("Earth"))
@@ -202,11 +207,12 @@ public class Harpoon : MonoBehaviour
             StartCoroutine(ScreenShake());
             Time.timeScale = 0.2f;
         }
+        PlayRandomAudioClip();
         yield return new WaitForSeconds(pauseDuration);
 
         Time.timeScale = 1f;
         ParticleSystem newParticleSystem = Instantiate(particleSystemPrefab, transform.position, transform.rotation);
-        
+        //PlayRandomAudioClip();
 
         if (shotBack)
         {
@@ -233,5 +239,18 @@ public class Harpoon : MonoBehaviour
         }
 
         mainCamera.transform.position = originalPosition;
+    }
+
+    void PlayRandomAudioClip()
+    {
+        // Use Random.Range to generate a random index within the list
+        int randomIndex = Random.Range(0, audioClips.Count);
+
+        // Access the randomly chosen AudioClip
+        AudioClip randomAudioClip = audioClips[randomIndex];
+
+        // Play the randomly chosen audio clip
+        audioSource.clip = randomAudioClip;
+        audioSource.Play();
     }
 }

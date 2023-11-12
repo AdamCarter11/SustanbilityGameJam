@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +24,10 @@ public class Player : MonoBehaviour
     [SerializeField] float damageFromCloud = .1f;
     [SerializeField] float stunDur = 2.5f;
 
+    [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
+    [SerializeField] List<AudioClip> harpoonAudioClips = new List<AudioClip>();
+    private AudioSource audioSource;
+
     private Rigidbody2D rb;
     private Camera mainCamera;
     private GameObject projectile = null;
@@ -42,6 +47,7 @@ public class Player : MonoBehaviour
         mainCamera = Camera.main;
         health = startingHealth;
         spriteRenderer = sprite.GetComponent<SpriteRenderer>();
+        audioSource = GameObject.FindGameObjectWithTag("AudioPlayer").GetComponent<AudioSource>();
         originalColor = spriteRenderer.color;
         origionalMaxSpeed = maxSpeed;
     }
@@ -107,6 +113,7 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && projectile == null)
         {
             projectile = Instantiate(projectilePrefab, transform.position, projectileDir.rotation);
+            PlayRandomHarpoonAudioClip();
         }
     }
 
@@ -187,14 +194,15 @@ public class Player : MonoBehaviour
             rb.velocity = rb.velocity.normalized * maxSpeed;
         }
     }
-
+     
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Trash"))
         {
             health -= damageFromProj;
             Destroy(collision.gameObject);
-            if(health <= 0)
+            PlayRandomAudioClip();
+            if (health <= 0)
             {
                 // stun logic
                 StartCoroutine(StunLogic());
@@ -251,5 +259,31 @@ public class Player : MonoBehaviour
 
         // Reset the color to the original color after the flashing is done
         spriteRenderer.color = originalColor;
+    }
+
+    void PlayRandomAudioClip()
+    {
+        // Use Random.Range to generate a random index within the list
+        int randomIndex = Random.Range(0, audioClips.Count);
+
+        // Access the randomly chosen AudioClip
+        AudioClip randomAudioClip = audioClips[randomIndex];
+
+        // Play the randomly chosen audio clip
+        audioSource.clip = randomAudioClip;
+        audioSource.Play();
+    }
+
+    void PlayRandomHarpoonAudioClip()
+    {
+        // Use Random.Range to generate a random index within the list
+        int randomIndex = Random.Range(0, harpoonAudioClips.Count);
+
+        // Access the randomly chosen AudioClip
+        AudioClip randomAudioClip = harpoonAudioClips[randomIndex];
+
+        // Play the randomly chosen audio clip
+        audioSource.clip = randomAudioClip;
+        audioSource.Play();
     }
 }

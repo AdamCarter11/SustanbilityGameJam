@@ -15,9 +15,13 @@ public class TrashSpawner : MonoBehaviour
     [SerializeField] float minSpawnSpeed = 100f, maxSpawnSpeed = 150f;
     [SerializeField] float spawnStartDelay = 1f, spawnerDelay = 1f;
     [SerializeField] float compactorSpawnStartDelay = 10f, compactorSpawnerDelay = 5f;
+
+    [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
+    private AudioSource audioSource;
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GameObject.FindGameObjectWithTag("AudioPlayer").GetComponent<AudioSource>();
         InvokeRepeating("SpawnTrash", spawnStartDelay, spawnerDelay);
         InvokeRepeating("SpawnCompactor", compactorSpawnStartDelay, compactorSpawnerDelay);
     }
@@ -87,5 +91,17 @@ public class TrashSpawner : MonoBehaviour
 
 
 
+    }
+    void PlayRandomAudioClip()
+    {
+        // Use Random.Range to generate a random index within the list
+        int randomIndex = Random.Range(0, audioClips.Count);
+
+        // Access the randomly chosen AudioClip
+        AudioClip randomAudioClip = audioClips[randomIndex];
+
+        // Play the randomly chosen audio clip
+        audioSource.clip = randomAudioClip;
+        audioSource.Play();
     }
 }
