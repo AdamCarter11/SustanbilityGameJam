@@ -2991,7 +2991,7 @@ MonoBehaviour:
   m_text: Press left click to shoot out a trash collector and bring it back to you.
     Once you have trash, throw it back at earth to pollute earth and stop them from
     polluting outer space. You can also throw it back at other trash to destroy both.
-    Trash will orbit you once collected until you throw it back in the direction
+    Trash will orbit you once collected it until you throw it back in the direction
     of the cursor.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

@@ -174,7 +174,7 @@ public class Harpoon : MonoBehaviour
         {
             isOrbiting = true;
             shotBack = true;
-            print("retract?");
+            //print("retract?");
         }
     }
 

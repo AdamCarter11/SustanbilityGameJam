@@ -7,6 +7,7 @@ public class GameOver : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI scorePercent;
     [SerializeField] TextMeshProUGUI scorePlayerPercent;
+    [SerializeField] TextMeshProUGUI winOutcome;
     private float earthPercent, playerPercent;
     void Start()
     {
@@ -23,6 +24,14 @@ public class GameOver : MonoBehaviour
         playerPercent = Mathf.Min(playerPercent, 100);
         scorePercent.text = "Earth was : " + playerPercent + "% polluted"; 
         scorePlayerPercent.text = "Space was: " + earthPercent + "% polluted";
+        if(playerPercent >= 100)
+        {
+            winOutcome.text = "Player wins!";
+        }
+        if(earthPercent >= 100)
+        {
+            winOutcome.text = "Earth polluted space; Player loses!";
+        }
     }
 } 
  
