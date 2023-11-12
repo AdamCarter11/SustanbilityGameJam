@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,12 +18,13 @@ public class Player : MonoBehaviour
     [SerializeField] Image healthFill;
     [SerializeField] int startingHealth = 20;
     [SerializeField] int damageFromProj = 5;
+    [SerializeField] float damageFromCloud = .1f;
     [SerializeField] float stunDur = 2.5f;
 
     private Rigidbody2D rb;
     private Camera mainCamera;
     private GameObject projectile = null;
-    private int health;
+    private float health;
     private bool canDash = true; // Flag to check if the player can dash
     private bool stunned = false;
     private float origionalMaxSpeed;
@@ -192,6 +194,14 @@ public class Player : MonoBehaviour
                 // stun logic
                 StartCoroutine(StunLogic());
             }
+        }
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        health -= damageFromCloud;
+        if(health <= 0)
+        {
+            StartCoroutine(StunLogic());
         }
     }
     IEnumerator StunLogic()

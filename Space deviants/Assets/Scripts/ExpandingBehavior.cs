@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class ExpandingBehavior : MonoBehaviour
 {
-    private YieldInstruction fadeInstruction = new YieldInstruction();
-    public float fadeTime = .01f;
+    
+    public float fadeTime = 3f;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,22 +24,31 @@ public class ExpandingBehavior : MonoBehaviour
 
         if(gameObject.transform.localScale.x >= 2)
         {
-            FadeOut(gameObject.GetComponent<SpriteRenderer>().color);
+            StartCoroutine(Fade());
+            //print("fade");
         }
+        
+        //print(gameObject.GetComponent<SpriteRenderer>().color);
 
-        IEnumerator FadeOut(Color go)
+        if(gameObject.GetComponent<SpriteRenderer>().color.a == 0)
         {
-            float elapsedTime = 0.0f;
-            Color c = go;
-            while (elapsedTime < fadeTime)
-            {
-                yield return fadeInstruction;
-                elapsedTime += Time.deltaTime;
-                c.a = 1.0f - Mathf.Clamp01(elapsedTime / fadeTime);
-                gameObject.GetComponent<SpriteRenderer>().color = c;
-            }
+            Destroy(gameObject);
+        }
+       
+    }
+    IEnumerator Fade()
+    {
+        SpriteRenderer rend = gameObject.GetComponent<SpriteRenderer>();
+        Color initialColor = rend.color;
+        Color targetColor = new Color(initialColor.r, initialColor.g, initialColor.b, 0f);
+
+        float elapsedTime = 0f;
+        while (elapsedTime < 5)
+        {
+            elapsedTime += Time.deltaTime;
+            rend.color = Color.Lerp(initialColor, targetColor, elapsedTime / 5);
+            yield return null;
         }
     }
-
 
 }

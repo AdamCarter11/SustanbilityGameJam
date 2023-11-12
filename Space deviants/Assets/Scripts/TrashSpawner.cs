@@ -55,9 +55,6 @@ public class TrashSpawner : MonoBehaviour
         }
 
 
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
     }
 }
