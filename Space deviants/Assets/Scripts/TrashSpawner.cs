@@ -15,6 +15,7 @@ public class TrashSpawner : MonoBehaviour
     [SerializeField] float minSpawnSpeed = 100f, maxSpawnSpeed = 150f;
     [SerializeField] float spawnStartDelay = 1f, spawnerDelay = 1f;
     [SerializeField] float compactorSpawnStartDelay = 10f, compactorSpawnerDelay = 5f;
+    [SerializeField] float rotationSpeed = 30f;
 
     [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
     private AudioSource audioSource;
@@ -29,6 +30,7 @@ public class TrashSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        transform.Rotate(Vector3.forward * rotationSpeed * Time.deltaTime);
         /*
         if (Input.GetKeyUp(KeyCode.Space))
         {

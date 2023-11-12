@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ExpandingBehavior : MonoBehaviour
 {
-    
+    [SerializeField] GameObject fadeObj;
     public float fadeTime = 3f;
     // Start is called before the first frame update
     void Start()
@@ -30,7 +30,7 @@ public class ExpandingBehavior : MonoBehaviour
         
         //print(gameObject.GetComponent<SpriteRenderer>().color);
 
-        if(gameObject.GetComponent<SpriteRenderer>().color.a == 0)
+        if(fadeObj.gameObject.GetComponent<SpriteRenderer>().color.a == 0)
         {
             Destroy(gameObject);
         }
@@ -38,7 +38,7 @@ public class ExpandingBehavior : MonoBehaviour
     }
     IEnumerator Fade()
     {
-        SpriteRenderer rend = gameObject.GetComponent<SpriteRenderer>();
+        SpriteRenderer rend = fadeObj.gameObject.GetComponent<SpriteRenderer>();
         Color initialColor = rend.color;
         Color targetColor = new Color(initialColor.r, initialColor.g, initialColor.b, 0f);
 

@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e4c1af0ae51a74fad2f48cb621e01e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fadeObj: {fileID: 7702990231867928437}
   fadeTime: 0.1
 --- !u!58 &1534609521343710687
 CircleCollider2D:
