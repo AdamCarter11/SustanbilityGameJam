@@ -16,13 +16,13 @@ public class ExpandingBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(gameObject.transform.localScale.x <= 2)
+        if(gameObject.transform.localScale.x <= 1.5)
         {
             gameObject.transform.localScale += new Vector3(.001f, .001f, .001f);
         }
         
 
-        if(gameObject.transform.localScale.x >= 2)
+        if(gameObject.transform.localScale.x >= 1.5)
         {
             StartCoroutine(Fade());
             //print("fade");
