@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class CompactorBehavior : MonoBehaviour
 {
+    [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
+    private AudioSource audioSource;
+
     GameManager gm;
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GameObject.FindGameObjectWithTag("AudioPlayer").GetComponent<AudioSource>();
         Destroy(gameObject, 5f);
     }
 
@@ -22,11 +26,24 @@ public class CompactorBehavior : MonoBehaviour
         {
             gm = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManager>();
             gm.emptyTrash();
+            PlayRandomAudioClip();
             Destroy(gameObject);
         }
         if (collision.gameObject.tag == "Trash")
         {
             Destroy(gameObject);
         }
+    }
+    void PlayRandomAudioClip()
+    {
+        // Use Random.Range to generate a random index within the list
+        int randomIndex = Random.Range(0, audioClips.Count);
+
+        // Access the randomly chosen AudioClip
+        AudioClip randomAudioClip = audioClips[randomIndex];
+
+        // Play the randomly chosen audio clip
+        audioSource.clip = randomAudioClip;
+        audioSource.Play();
     }
 }
