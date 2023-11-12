@@ -206,16 +206,17 @@ public class Harpoon : MonoBehaviour
         {
             StartCoroutine(ScreenShake());
             Time.timeScale = 0.2f;
+            PlayRandomAudioClip();
         }
-        PlayRandomAudioClip();
         yield return new WaitForSeconds(pauseDuration);
 
         Time.timeScale = 1f;
-        ParticleSystem newParticleSystem = Instantiate(particleSystemPrefab, transform.position, transform.rotation);
+        
         //PlayRandomAudioClip();
 
         if (shotBack)
         {
+            ParticleSystem newParticleSystem = Instantiate(particleSystemPrefab, transform.position, transform.rotation);
             gm = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManager>();
             gm.AddTrash(2);
         }

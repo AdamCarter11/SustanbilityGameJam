@@ -42,11 +42,11 @@ public class GameManager : MonoBehaviour
     {
         if(currEarthTrash  >=  maxEarthTrash || currPlayerTrash >= maxEarthTrash)
         {
-            PlayerPrefs.SetFloat("player", currEarthTrash / maxEarthTrash);
-            PlayerPrefs.SetFloat("enemy", currPlayerTrash / maxPlayerTrash);
+            PlayerPrefs.SetFloat("player", (currEarthTrash / maxEarthTrash));
+            PlayerPrefs.SetFloat("enemy", (currPlayerTrash / maxPlayerTrash));
             StopAllCoroutines();
             SceneManager.LoadScene("GameOver");
-        }
+        } 
     }
 
     public void AddTrash(int type)
@@ -89,16 +89,19 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator emptyPlayerTrash()
     {
-        addPlayerTrash = false;
-        while (currPlayerTrash > tempPlayerTrashGoal)
+        if(currPlayerTrash > 0 && tempPlayerTrashGoal > 0)
         {
-            print("empty");
-            currPlayerTrash -= .1f;
-            playerTrash.transform.localScale *= 1f/0.9984f;
-            yield return new WaitForSeconds(.01f);
+            addPlayerTrash = false;
+            while (currPlayerTrash > tempPlayerTrashGoal)
+            {
+                print("empty");
+                currPlayerTrash -= .1f;
+                playerTrash.transform.localScale *= 1f / 0.9984f;
+                yield return new WaitForSeconds(.01f);
 
+            }
+            addPlayerTrash = true;
         }
-        addPlayerTrash = true;
     }
     IEnumerator fillEarthTrash()
     {
@@ -110,7 +113,7 @@ public class GameManager : MonoBehaviour
 
         while (currEarthTrash < tempEarthTrashGoal)
         {
-            currEarthTrash += 0.1f;
+            currEarthTrash += 1f;
             earthTrash.transform.localScale *= 1f / 0.9984f;
             // Calculate the scale factor based on currEarthTrash
             //float scaleFactor = baseScale + (currEarthTrash / tempEarthTrashGoal) * maxScaleFactor;

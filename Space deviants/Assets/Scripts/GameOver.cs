@@ -18,6 +18,8 @@ public class GameOver : MonoBehaviour
         // Change the text of the TextMeshPro object
         earthPercent = Mathf.Round(PlayerPrefs.GetFloat("enemy") * 100f * 100f) / 100f;
         playerPercent = Mathf.Round(PlayerPrefs.GetFloat("player") * 100f * 100f) / 100f;
+        earthPercent = Mathf.Min(earthPercent, 100);
+        playerPercent = Mathf.Min(playerPercent, 100);
         scorePercent.text = "Earth was : " + playerPercent + "% polluted, Space was: " + earthPercent + "% polluted";
     }
 } 

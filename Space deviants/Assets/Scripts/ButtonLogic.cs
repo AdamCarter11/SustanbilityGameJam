@@ -5,8 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class ButtonLogic : MonoBehaviour
 {
+    [SerializeField] GameObject tutorialPanel;
     public void StartGame()
     {
         SceneManager.LoadScene("SampleScene");
+    }
+    public void OpenTutorialPanel()
+    {
+        tutorialPanel.SetActive(true);
     }
 }
