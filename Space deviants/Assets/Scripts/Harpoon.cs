@@ -1,33 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class Harpoon : MonoBehaviour
 {
     [SerializeField] float speed = 5f;
     [SerializeField] float maxDistance = 5f;
     [SerializeField] float retractSpeed = 5f;
+    [SerializeField] float shakeMagnitude = 0.1f;
+    [SerializeField] float shakeDuration = 0.2f;
+    [SerializeField] float pauseDuration = 0.5f;
 
     GameManager gm;
 
     private float distanceTraveled = 0f;
     private bool grabbedObj = false;
     private bool launchObj = false;
+    private bool shotBack = false;
+    private bool canMove = true;
     private GameObject player, planet;
     private Rigidbody2D rb;
-    private bool shotBack = false;
+    private Camera mainCamera;
+
+    private Vector3 initialPosition;
+    private Quaternion initialRotation;
+    private bool isOrbiting = false;
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         planet = GameObject.FindGameObjectWithTag("Earth");
         rb = GetComponent<Rigidbody2D>();
+        mainCamera = Camera.main;
+
+        // Store initial position and rotation
+        initialPosition = transform.position;
+        initialRotation = transform.rotation;
     }
 
-    void Update()
+    private void Update()
     {
-        if (!grabbedObj)
+        if (!grabbedObj && !isOrbiting)
         {
             MoveProjectile();
         }
@@ -35,76 +48,43 @@ public class Harpoon : MonoBehaviour
         {
             if (!launchObj && !shotBack)
             {
-                RetractProj();
+                if (canMove)  // Only retract if allowed to move
+                    RetractProj();
             }
-            else if(launchObj)
+            else if (launchObj)
             {
                 LaunchBackProj();
                 launchObj = false;
                 shotBack = true;
+                canMove = false;  // Disable movement after firing back
+            }
+            else if (Input.GetMouseButtonDown(0) && isOrbiting)
+            {
+                StopOrbiting();
+                launchObj = true;
+                canMove = true;  // Enable movement when launching again
+            }
+            else if (isOrbiting)
+            {
+                OrbitPlayer();
             }
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !isOrbiting && canMove && !launchObj)
         {
             launchObj = true;
         }
 
-        // Check if the projectile has traveled the desired distance
+        CheckMaxDistance();
+    }
+
+    private void CheckMaxDistance()
+    {
         if (distanceTraveled >= maxDistance && !grabbedObj)
         {
+            Time.timeScale = 1f;
             Destroy(gameObject);
         }
-    }
-
-    void LaunchBackProj()
-    {
-        if (planet == null)
-        {
-            Debug.LogWarning("Planet object not assigned!");
-            return;
-        }
-
-        // Calculate the direction from the object to the mouse cursor
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 directionToMouse = mousePos - transform.position;
-
-        // Normalize the direction to get a unit vector
-        Vector3 normalizedDirection = directionToMouse.normalized;
-
-        // Use Rigidbody.AddForce to apply force in the calculated direction
-        rb.AddForce(normalizedDirection * retractSpeed * 500 * Time.deltaTime, ForceMode2D.Impulse);
-        print("proj force: " + rb.velocity);
-        Destroy(this.gameObject, 2f);
-    } 
-     
-    void RetractProj()
-    {
-        if (player == null)
-        {
-            Debug.LogWarning("Player object not assigned!");
-            return;
-        }
-
-        // Calculate the direction from the current position to the target position
-        Vector3 directionToTarget = player.transform.position - transform.position;
-        if (Vector2.Distance(player.transform.position, transform.position) >= 1f)
-        {
-            // Normalize the direction to get a unit vector
-            Vector3 normalizedDirection = directionToTarget.normalized;
-
-            // Move the object in the calculated direction
-            transform.Translate(normalizedDirection * retractSpeed * Time.deltaTime);
-        }
-    }
-
-    void MoveProjectile()
-    {
-        // Move the projectile forward based on its local space
-        transform.Translate(Vector3.right * speed * Time.deltaTime);
-
-        // Update the distance traveled
-        distanceTraveled += speed * Time.deltaTime;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -127,18 +107,118 @@ public class Harpoon : MonoBehaviour
             if (shotBack)
             {
                 Destroy(collision.gameObject);
+                Time.timeScale = 1f;
                 Destroy(this.gameObject);
             }
         }
         if (collision.gameObject.CompareTag("Earth"))
         {
-            Destroy(this.gameObject);
+            StartCoroutine(DestroyWithDelay());
             if (shotBack)
             {
-                // planet gets more trash
                 gm = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManager>();
                 gm.AddTrash(2);
             }
         }
+    }
+
+    private void MoveProjectile()
+    {
+        transform.Translate(Vector3.right * speed * Time.deltaTime);
+        distanceTraveled += speed * Time.deltaTime;
+    }
+
+    private void LaunchBackProj()
+    {
+        if (planet == null)
+        {
+            Debug.LogWarning("Planet object not assigned!");
+            return;
+        }
+
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 directionToMouse = mousePos - transform.position;
+        Vector3 normalizedDirection = directionToMouse.normalized;
+
+        rb.AddForce(normalizedDirection * retractSpeed * 500 * Time.deltaTime, ForceMode2D.Impulse);
+        Time.timeScale = 1f;
+        Destroy(this.gameObject, 2f);
+    }
+
+    private void RetractProj()
+    {
+        if (player == null)
+        {
+            Debug.LogWarning("Player object not assigned!");
+            return;
+        }
+
+        Vector3 directionToTarget = player.transform.position - transform.position;
+        if (Vector2.Distance(player.transform.position, transform.position) >= 1f)
+        {
+            Vector3 normalizedDirection = directionToTarget.normalized;
+            transform.Translate(normalizedDirection * retractSpeed * Time.deltaTime);
+        }
+    }
+
+    private void OrbitPlayer()
+    {
+        float orbitSpeed = 2f;
+        float orbitRadius = 1.5f;
+
+        // Calculate the angle based on time and speed
+        float angle = Time.time * orbitSpeed;
+
+        // Calculate the position in a circular motion
+        float x = Mathf.Cos(angle) * orbitRadius;
+        float y = Mathf.Sin(angle) * orbitRadius;
+
+        // Set the new position relative to the player
+        transform.position = player.transform.position + new Vector3(x, y, 0f);
+    }
+
+    private void StopOrbiting()
+    {
+        isOrbiting = false;
+        transform.position = initialPosition;
+        transform.rotation = initialRotation;
+    }
+
+    private IEnumerator DestroyWithDelay()
+    {
+        if (shotBack)
+        {
+            StartCoroutine(ScreenShake());
+            Time.timeScale = 0.2f;
+        }
+        yield return new WaitForSeconds(pauseDuration);
+
+        Time.timeScale = 1f;
+        Destroy(gameObject);
+
+        if (shotBack)
+        {
+            gm = GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManager>();
+            gm.AddTrash(2);
+        }
+    }
+
+    private IEnumerator ScreenShake()
+    {
+        Vector3 originalPosition = mainCamera.transform.position;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < shakeDuration)
+        {
+            float offsetX = Random.Range(-1f, 1f) * shakeMagnitude;
+            float offsetY = Random.Range(-1f, 1f) * shakeMagnitude;
+
+            mainCamera.transform.position = originalPosition + new Vector3(offsetX, offsetY, 0f);
+
+            elapsedTime += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        mainCamera.transform.position = originalPosition;
     }
 }

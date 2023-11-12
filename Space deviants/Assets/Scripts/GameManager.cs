@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
         {
             PlayerPrefs.SetFloat("player", currEarthTrash / maxEarthTrash);
             PlayerPrefs.SetFloat("enemy", currPlayerTrash / maxPlayerTrash);
+            StopAllCoroutines();
             SceneManager.LoadScene("GameOver");
         }
     }

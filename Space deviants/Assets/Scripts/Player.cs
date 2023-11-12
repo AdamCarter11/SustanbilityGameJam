@@ -217,7 +217,18 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(stunDur);
         rb.freezeRotation = true;
         health = startingHealth;
+        transform.rotation = Vector3ToQuaternion(new Vector3(0,0,0));
         stunned = false;
+    }
+    Quaternion Vector3ToQuaternion(Vector3 vector)
+    {
+        // Assuming the vector lies in the xy-plane, calculate the angle of rotation around the z-axis
+        float angle = Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg;
+
+        // Create a quaternion that represents the rotation around the z-axis
+        Quaternion quaternion = Quaternion.Euler(0.0f, 0.0f, angle);
+
+        return quaternion;
     }
     IEnumerator FlashCharacter()
     {

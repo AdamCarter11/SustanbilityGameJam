@@ -102,6 +102,9 @@ MonoBehaviour:
   speed: 10
   maxDistance: 5
   retractSpeed: 15
+  shakeMagnitude: 0.1
+  shakeDuration: 0.2
+  pauseDuration: 0.05
 --- !u!70 &8296202843099415953
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
